@@ -82,10 +82,10 @@ const MigrationForm: React.FC = () => {
       });
 
       if (!response.ok) throw new Error("Error al enviar los datos");
-      navigate('/gracias-kit');
+      navigate('/kit-migracion');
     } catch (err) {
       console.error(err);
-      navigate('/gracias-kit');
+      navigate('/kit-migracion');
     } finally {
       setLoading(false);
     }

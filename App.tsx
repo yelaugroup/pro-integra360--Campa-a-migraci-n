@@ -2,6 +2,7 @@ import React from 'react';
 import { Routes, Route } from 'react-router-dom';
 import LandingPage from './pages/LandingPage';
 import SuccessPage from './pages/SuccessPage';
+import MigrationKit from './pages/MigrationKit';
 import ConfirmPage from './pages/ConfirmPage';
 import PrivacyPolicy from './pages/PrivacyPolicy';
 import UnsubscribePage from './pages/UnsubscribePage';
@@ -17,6 +18,7 @@ const App: React.FC = () => {
         <Routes>
           <Route path="/" element={<LandingPage />} />
           <Route path="/gracias-kit" element={<SuccessPage />} />
+          <Route path="/kit-migracion" element={<MigrationKit />} />
           <Route path="/confirmar" element={<ConfirmPage />} />
           <Route path="/privacidad" element={<PrivacyPolicy />} />
           <Route path="/baja" element={<UnsubscribePage />} />
