@@ -6,6 +6,12 @@ export const CONFIG = {
   UNSUBSCRIBE_URL: "https://sswebhook.yelaugroup.info/webhook/proi360-unsubscribe",
   EVENT_TRACK_URL: "https://sswebhook.yelaugroup.info/webhook/proi360-event",
   CALENDLY_URL: "https://calendly.com/pro-integra360/demo",
+  KIT_FILES: {
+    KIT_PDF: "/files/prointegra360-kit.pdf",
+    CHECKLIST_PDF: "/files/prointegra360-checklist.pdf",
+    PLANTILLA_EXCEL: "/files/prointegra360-plantilla.xlsx",
+    KIT_VISUAL_PDF: "/files/prointegra360-kit-visual.pdf",
+  },
   PROVINCIAS_ESPANA: [
     "Álava", "Albacete", "Alicante", "Almería", "Asturias", "Ávila", "Badajoz", "Baleares", "Barcelona", "Burgos", "Cáceres", "Cádiz", "Cantabria", "Castellón", "Ciudad Real", "Córdoba", "Cuenca", "Gerona", "Granada", "Guadalajara", "Guipúzcoa", "Huelva", "Huesca", "Jaén", "La Coruña", "La Rioja", "Las Palmas", "León", "Lérida", "Lugo", "Madrid", "Málaga", "Murcia", "Navarra", "Orense", "Palencia", "Pontevedra", "Salamanca", "Santa Cruz de Tenerife", "Segovia", "Sevilla", "Soria", "Tarragona", "Teruel", "Toledo", "Valencia", "Valladolid", "Vizcaya", "Zamora", "Zaragoza", "Ceuta", "Melilla"
   ]

@@ -51,28 +51,28 @@ const MigrationKit: React.FC = () => {
       title: "Descarga el PDF estratégico",
       icon: <FileText className="w-6 h-6" />,
       actionText: "Descargar y empezar ahora",
-      href: "#", // Placeholder
+      href: CONFIG.KIT_FILES.KIT_PDF,
     },
     {
       id: 2,
       title: "Checklist de migración",
       icon: <CheckSquare className="w-6 h-6" />,
       actionText: "Descargar y empezar ahora",
-      href: "#", // Placeholder
+      href: CONFIG.KIT_FILES.CHECKLIST_PDF,
     },
     {
       id: 3,
       title: "Plantilla de importación",
       icon: <FileSpreadsheet className="w-6 h-6" />,
       actionText: "Descargar plantilla y empezar",
-      href: "#", // Placeholder
+      href: CONFIG.KIT_FILES.PLANTILLA_EXCEL,
     },
     {
       id: 4,
       title: "Visualiza el kit visual",
       icon: <Eye className="w-6 h-6" />,
       actionText: "Ver guía estratégica",
-      href: "#", // Placeholder
+      href: CONFIG.KIT_FILES.KIT_VISUAL_PDF,
       isSpecial: true,
     },
     {
@@ -80,7 +80,7 @@ const MigrationKit: React.FC = () => {
       title: "(Opcional) Vídeo explicativo",
       icon: <PlayCircle className="w-6 h-6" />,
       actionText: "Ver explicación rápida",
-      href: "#", // Placeholder
+      href: "#", // Usually an external link like YouTube/Vimeo
     },
   ];
 
