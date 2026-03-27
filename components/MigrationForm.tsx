@@ -82,6 +82,10 @@ const MigrationForm: React.FC = () => {
       });
 
       if (!response.ok) throw new Error("Error al enviar los datos");
+      
+      // Save email for later tracking in the Kit page
+      localStorage.setItem('proi360_user_email', formData.email);
+      
       navigate('/kit-migracion');
     } catch (err) {
       console.error(err);
