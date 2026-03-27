@@ -57,12 +57,6 @@ const Header: React.FC = () => {
           >
             El Kit
           </a>
-          <Link 
-            to="/dashboard"
-            className="text-xs font-bold text-brand-anthracite bg-brand-yellow/10 px-3 py-1 rounded border border-brand-yellow transition uppercase tracking-wider"
-          >
-            Demo Live
-          </Link>
           <a 
             href="#preguntas-frecuentes" 
             onClick={(e) => handleNavClick(e, 'preguntas-frecuentes')}
@@ -72,12 +66,6 @@ const Header: React.FC = () => {
           </a>
         </nav>
         <div className="flex items-center space-x-4">
-          <Link 
-            to="/dashboard"
-            className="hidden sm:inline-block text-xs font-black text-brand-anthracite hover:underline uppercase"
-          >
-            Login
-          </Link>
           <a 
             href="#formulario-kit" 
             onClick={(e) => handleNavClick(e, 'formulario-kit')}

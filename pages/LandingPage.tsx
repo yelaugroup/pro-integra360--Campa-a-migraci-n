@@ -63,12 +63,6 @@ const LandingPage: React.FC = () => {
               >
                 Recibir Kit de Migración <ArrowRight className="ml-2 w-5 h-5" />
               </a>
-              <Link 
-                to="/dashboard"
-                className="inline-flex items-center justify-center bg-white text-brand-anthracite border-2 border-brand-anthracite px-8 py-4 rounded-lg font-bold text-lg hover:bg-brand-anthracite hover:text-white transition"
-              >
-                Probar Demo Live <PlayCircle className="ml-2 w-5 h-5" />
-              </Link>
             </div>
           </div>
         </div>
@@ -108,23 +102,18 @@ const LandingPage: React.FC = () => {
                 ))}
               </div>
             </div>
-            <div className="relative group">
-               <div className="absolute inset-0 bg-brand-yellow/20 blur-[100px] -z-10 group-hover:bg-brand-yellow/40 transition"></div>
-               <Link to="/dashboard" className="block relative bg-[#2a2a2a] p-2 rounded-3xl border border-white/5 shadow-[0_20px_50px_rgba(0,0,0,0.5)] transform lg:rotate-2 hover:rotate-0 transition-all duration-700 hover:scale-105">
+            <div className="relative">
+               <div className="absolute inset-0 bg-brand-yellow/20 blur-[100px] -z-10"></div>
+               <div className="block relative bg-[#2a2a2a] p-2 rounded-3xl border border-white/5 shadow-[0_20px_50px_rgba(0,0,0,0.5)] transform lg:rotate-2">
                  <img 
                    src="https://mentorias.ivannieto.com/wp-content/uploads/2025/10/Screenshot_139-1536x736.png" 
                    alt="Interfaz PRO Integra 360" 
-                   className="rounded-2xl w-full h-auto shadow-2xl opacity-90 group-hover:opacity-100 transition" 
+                   className="rounded-2xl w-full h-auto shadow-2xl opacity-90" 
                  />
-                 <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition duration-500">
-                    <div className="bg-brand-yellow text-brand-anthracite px-6 py-3 rounded-full font-black flex items-center shadow-2xl scale-75 group-hover:scale-100 transition-transform">
-                      <PlayCircle className="mr-2" /> ENTRAR A LA DEMO INTERACTIVA
-                    </div>
-                 </div>
                  <div className="absolute bottom-6 left-6">
                     <div className="bg-brand-yellow text-brand-anthracite px-4 py-1 rounded text-xs font-black uppercase tracking-widest shadow-lg">Interfaz de Usuario Oficial</div>
                  </div>
-               </Link>
+               </div>
             </div>
           </div>
         </div>

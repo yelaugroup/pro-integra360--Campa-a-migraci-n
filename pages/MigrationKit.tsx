@@ -4,18 +4,20 @@ import { FileText, Eye, CheckSquare, FileSpreadsheet, PlayCircle, Calendar, Lock
 import { CONFIG } from '../constants';
 
 const MigrationKit: React.FC = () => {
-  const [loadingPdf, setLoadingPdf] = useState(false);
+  const [loadingResource, setLoadingResource] = useState<string | null>(null);
   
-  const handlePdfDownload = async (e: React.MouseEvent, href: string) => {
+  const handleResourceDownload = async (e: React.MouseEvent, item: any) => {
     e.preventDefault();
-    setLoadingPdf(true);
+    const { href, resourceName } = item;
+    
+    setLoadingResource(resourceName);
     
     const email = localStorage.getItem('proi360_user_email') || 'unknown@taller.com';
     
     const payload = {
       email: email,
-      evento: "descarga_pdf",
-      recurso: "pdf_estrategico",
+      evento: "descarga_recurso",
+      recurso: resourceName,
       page_url: window.location.href,
       timestamp: new Date().toISOString()
     };
@@ -33,14 +35,18 @@ const MigrationKit: React.FC = () => {
     } catch (err) {
       console.error("Fallo al enviar evento al webhook:", err);
     } finally {
-      setLoadingPdf(false);
-      // Abrir el PDF de todas formas
+      setLoadingResource(null);
+      
       if (href && href !== '#') {
-        window.open(href, '_blank');
+        if (href.endsWith('.pdf')) {
+          window.open(href, '_blank');
+        } else {
+          // Para Excel u otros, descarga directa
+          window.location.href = href;
+        }
       } else {
-        // Si es #, al menos mostramos un mensaje o simulamos la apertura
-        console.log("Abriendo PDF estratégico (simulado)...");
-        alert("El PDF estratégico se está abriendo en una nueva pestaña.");
+        console.log(`Abriendo recurso ${resourceName} (simulado)...`);
+        alert(`El recurso "${item.title}" se está procesando.`);
       }
     }
   };
@@ -52,6 +58,7 @@ const MigrationKit: React.FC = () => {
       icon: <FileText className="w-6 h-6" />,
       actionText: "Descargar y empezar ahora",
       href: CONFIG.KIT_FILES.KIT_PDF,
+      resourceName: "pdf_estrategico",
     },
     {
       id: 2,
@@ -59,6 +66,7 @@ const MigrationKit: React.FC = () => {
       icon: <CheckSquare className="w-6 h-6" />,
       actionText: "Descargar y empezar ahora",
       href: CONFIG.KIT_FILES.CHECKLIST_PDF,
+      resourceName: "checklist_migracion",
     },
     {
       id: 3,
@@ -66,6 +74,7 @@ const MigrationKit: React.FC = () => {
       icon: <FileSpreadsheet className="w-6 h-6" />,
       actionText: "Descargar plantilla y empezar",
       href: CONFIG.KIT_FILES.PLANTILLA_EXCEL,
+      resourceName: "plantilla_importacion",
     },
     {
       id: 4,
@@ -73,7 +82,7 @@ const MigrationKit: React.FC = () => {
       icon: <Eye className="w-6 h-6" />,
       actionText: "Ver guía estratégica",
       href: CONFIG.KIT_FILES.KIT_VISUAL_PDF,
-      isSpecial: true,
+      resourceName: "kit_visual",
     },
     {
       id: 5,
@@ -81,6 +90,7 @@ const MigrationKit: React.FC = () => {
       icon: <PlayCircle className="w-6 h-6" />,
       actionText: "Ver explicación rápida",
       href: "#", // Usually an external link like YouTube/Vimeo
+      resourceName: "video_explicativo",
     },
   ];
 
@@ -117,22 +127,13 @@ const MigrationKit: React.FC = () => {
                     <h3 className="font-bold text-brand-anthracite text-lg">{item.title}</h3>
                   </div>
                 </div>
-                {item.isSpecial ? (
-                  <button 
-                    onClick={(e) => handlePdfDownload(e, item.href)}
-                    disabled={loadingPdf}
-                    className="w-full md:w-auto px-6 py-2.5 bg-brand-anthracite text-white rounded-lg font-semibold text-sm hover:bg-brand-anthracite/90 transition text-center shadow-sm disabled:opacity-70 disabled:cursor-not-allowed"
-                  >
-                    {loadingPdf ? "Preparando descarga..." : item.actionText}
-                  </button>
-                ) : (
-                  <a 
-                    href={item.href}
-                    className="w-full md:w-auto px-6 py-2.5 bg-brand-anthracite text-white rounded-lg font-semibold text-sm hover:bg-brand-anthracite/90 transition text-center shadow-sm"
-                  >
-                    {item.actionText}
-                  </a>
-                )}
+                <button 
+                  onClick={(e) => handleResourceDownload(e, item)}
+                  disabled={!!loadingResource}
+                  className="w-full md:w-auto px-6 py-2.5 bg-brand-anthracite text-white rounded-lg font-semibold text-sm hover:bg-brand-anthracite/90 transition text-center shadow-sm disabled:opacity-70 disabled:cursor-not-allowed min-w-[180px]"
+                >
+                  {loadingResource === item.resourceName ? "Preparando descarga..." : item.actionText}
+                </button>
               </div>
             ))}
           </div>
