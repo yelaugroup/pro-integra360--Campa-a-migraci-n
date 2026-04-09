@@ -28,7 +28,7 @@ const Footer: React.FC = () => {
             <p className="text-sm text-gray-400">
               ¿Dudas sobre la migración?<br />
               info@prointegra360.es<br />
-              +34 900 000 000
+              +34 910 202 910
             </p>
           </div>
         </div>
