@@ -10,6 +10,7 @@ const MigrationKit: React.FC = () => {
     e.preventDefault();
     const { href, resourceName } = item;
     
+    console.log("tracking start", { resource: resourceName });
     setLoadingResource(resourceName);
     
     const email = localStorage.getItem('proi360_user_email') || 'unknown@taller.com';
@@ -29,11 +30,13 @@ const MigrationKit: React.FC = () => {
         body: JSON.stringify(payload),
       });
 
-      if (!response.ok) {
-        console.error("Error en el webhook de seguimiento:", response.statusText);
+      if (response.ok) {
+        console.log("tracking success");
+      } else {
+        console.error("tracking error", response.statusText);
       }
     } catch (err) {
-      console.error("Fallo al enviar evento al webhook:", err);
+      console.error("tracking error", err);
     } finally {
       setLoadingResource(null);
       

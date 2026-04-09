@@ -26,7 +26,7 @@ const LandingPage: React.FC = () => {
     "Guía Paso a Paso: El éxito de tu migración.",
     "Checklist de Auditoría de Datos Actuales.",
     "Plantilla de Importación de Clientes y Vehículos.",
-    "Sesión de Consultoría de 15 min (gratuita)."
+    "Sesión de Consultoría de 2 horas (gratuita)."
   ];
 
   const powerPoints = [
