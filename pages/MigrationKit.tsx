@@ -1,10 +1,14 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { FileText, Eye, CheckSquare, FileSpreadsheet, PlayCircle, Calendar, Lock } from 'lucide-react';
 import { CONFIG } from '../constants';
 
 const MigrationKit: React.FC = () => {
   const [loadingResource, setLoadingResource] = useState<string | null>(null);
+  
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
   
   const handleResourceDownload = async (e: React.MouseEvent, item: any) => {
     e.preventDefault();
@@ -155,7 +159,7 @@ const MigrationKit: React.FC = () => {
                 Te enseñamos cómo aplicarlo en tu taller
               </h3>
               <div className="text-brand-anthracite/80 mb-8 max-w-md mx-auto text-left md:text-center inline-block">
-                <p className="font-bold mb-2">En 15 minutos vas a ver:</p>
+                <p className="font-bold mb-2">En 2 horas vas a ver:</p>
                 <ul className="space-y-1 inline-block text-left">
                   <li>✔ dónde estás perdiendo dinero</li>
                   <li>✔ qué cambiar primero</li>
@@ -163,7 +167,7 @@ const MigrationKit: React.FC = () => {
                 </ul>
               </div>
               <a 
-                href={CONFIG.CALENDLY_URL}
+                href={CONFIG.EXTENDED_CALENDLY_URL}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="inline-flex items-center justify-center bg-brand-anthracite text-white px-10 py-4 rounded-xl font-bold text-lg hover:opacity-90 transition shadow-lg group w-full"

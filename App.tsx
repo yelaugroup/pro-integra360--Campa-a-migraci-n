@@ -1,5 +1,5 @@
-import React from 'react';
-import { Routes, Route } from 'react-router-dom';
+import React, { useEffect } from 'react';
+import { Routes, Route, useLocation } from 'react-router-dom';
 import LandingPage from './pages/LandingPage';
 import SuccessPage from './pages/SuccessPage';
 import MigrationKit from './pages/MigrationKit';
@@ -9,9 +9,20 @@ import UnsubscribePage from './pages/UnsubscribePage';
 import Header from './components/Header';
 import Footer from './components/Footer';
 
+const ScrollToTop: React.FC = () => {
+  const { pathname } = useLocation();
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [pathname]);
+
+  return null;
+};
+
 const App: React.FC = () => {
   return (
     <div className="min-h-screen flex flex-col bg-gray-50">
+      <ScrollToTop />
       <Header />
       <main className="flex-grow w-full">
         <Routes>
