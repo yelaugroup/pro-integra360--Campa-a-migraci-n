@@ -225,7 +225,7 @@ const MigrationForm: React.FC = () => {
             className="mt-1 w-4 h-4 text-brand-anthracite border-gray-300 rounded focus:ring-brand-yellow accent-brand"
           />
           <span className="ml-3 text-sm text-gray-600 group-hover:text-brand-anthracite transition">
-            He leído y acepto la <Link to="/privacidad" className="text-brand-anthracite font-semibold underline">Política de Privacidad</Link> *
+            He leído y acepto la <Link to="/politica-privacidad" className="text-brand-anthracite font-semibold underline">Política de Privacidad</Link> *
           </span>
         </label>
 

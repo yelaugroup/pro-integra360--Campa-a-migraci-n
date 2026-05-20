@@ -155,15 +155,21 @@ const MigrationKit: React.FC = () => {
             </div>
             
             <div className="bg-brand-yellow p-8 rounded-3xl shadow-xl transform hover:scale-[1.02] transition">
-              <h3 className="text-2xl font-bold text-brand-anthracite mb-4">
+              <h3 className="text-2xl font-bold text-brand-anthracite mb-1">
                 Te enseñamos cómo aplicarlo en tu taller
               </h3>
+              <span className="text-brand-anthracite/80 font-bold uppercase tracking-wider text-xs block mb-4">
+                Sesión estratégica gratuita para talleres<br />
+                Duración aproximada: 2 horas
+              </span>
               <div className="text-brand-anthracite/80 mb-8 max-w-md mx-auto text-left md:text-center inline-block">
-                <p className="font-bold mb-2">En 2 horas vas a ver:</p>
+                <p className="font-bold mb-2">Durante esta sesión veremos:</p>
                 <ul className="space-y-1 inline-block text-left">
-                  <li>✔ dónde estás perdiendo dinero</li>
-                  <li>✔ qué cambiar primero</li>
-                  <li>✔ cómo aplicarlo en tu caso real</li>
+                  <li>✓ cómo detectar pérdidas invisibles</li>
+                  <li>✓ qué procesos están frenando tu crecimiento</li>
+                  <li>✓ qué deberías cambiar primero</li>
+                  <li>✓ cómo organizar mejor recepción, operativa y facturación</li>
+                  <li>✓ cómo aplicar un sistema real en tu taller</li>
                 </ul>
               </div>
               <a 
@@ -173,7 +179,7 @@ const MigrationKit: React.FC = () => {
                 className="inline-flex items-center justify-center bg-brand-anthracite text-white px-10 py-4 rounded-xl font-bold text-lg hover:opacity-90 transition shadow-lg group w-full"
               >
                 <Calendar className="mr-2 w-5 h-5" />
-                Quiero ver cómo aplicarlo en mi taller
+                Reservar sesión estratégica gratuita
               </a>
             </div>
           </div>

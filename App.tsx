@@ -5,6 +5,8 @@ import SuccessPage from './pages/SuccessPage';
 import MigrationKit from './pages/MigrationKit';
 import ConfirmPage from './pages/ConfirmPage';
 import PrivacyPolicy from './pages/PrivacyPolicy';
+import AvisoLegal from './pages/AvisoLegal';
+import PoliticaCookies from './pages/PoliticaCookies';
 import UnsubscribePage from './pages/UnsubscribePage';
 import Header from './components/Header';
 import Footer from './components/Footer';
@@ -31,6 +33,9 @@ const App: React.FC = () => {
           <Route path="/kit-migracion" element={<MigrationKit />} />
           <Route path="/confirmar" element={<ConfirmPage />} />
           <Route path="/privacidad" element={<PrivacyPolicy />} />
+          <Route path="/politica-privacidad" element={<PrivacyPolicy />} />
+          <Route path="/aviso-legal" element={<AvisoLegal />} />
+          <Route path="/politica-cookies" element={<PoliticaCookies />} />
           <Route path="/baja" element={<UnsubscribePage />} />
           {/* Fallback para URLs antiguas si las hubiera */}
           <Route path="/migracion-software-taller" element={<LandingPage />} />
