@@ -58,6 +58,32 @@ const MigrationKit: React.FC = () => {
     }
   };
 
+  const handleVideoClick = () => {
+    const videoSection = document.getElementById('video-explicativo');
+    if (videoSection) {
+      videoSection.scrollIntoView({
+        behavior: 'smooth',
+        block: 'start'
+      });
+    }
+
+    const email = localStorage.getItem('proi360_user_email') || 'unknown@taller.com';
+
+    void fetch(CONFIG.EVENT_TRACK_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        email,
+        evento: 'video_view_click',
+        recurso: 'video_explicativo',
+        page_url: window.location.href,
+        timestamp: new Date().toISOString()
+      })
+    }).catch((err) => {
+      console.error('video tracking error', err);
+    });
+  };
+
   const kitItems = [
     {
       id: 1,
@@ -72,7 +98,7 @@ const MigrationKit: React.FC = () => {
       title: "Checklist de migración",
       icon: <CheckSquare className="w-6 h-6" />,
       actionText: "Descargar y empezar ahora",
-      href: CONFIG.KIT_FILES.CHECKLIST_PDF,
+      href: CONFIG.KIT_FILES.CHECKLIST_EXCEL,
       resourceName: "checklist_migracion",
     },
     {
@@ -90,14 +116,6 @@ const MigrationKit: React.FC = () => {
       actionText: "Ver guía estratégica",
       href: CONFIG.KIT_FILES.KIT_VISUAL_PDF,
       resourceName: "kit_visual",
-    },
-    {
-      id: 5,
-      title: "(Opcional) Vídeo explicativo",
-      icon: <PlayCircle className="w-6 h-6" />,
-      actionText: "Ver explicación rápida",
-      href: "#", // Usually an external link like YouTube/Vimeo
-      resourceName: "video_explicativo",
     },
   ];
 
@@ -143,7 +161,53 @@ const MigrationKit: React.FC = () => {
                 </button>
               </div>
             ))}
+
+            {/* Paso 05 independiente */}
+            <div 
+              className="flex flex-col md:flex-row items-center justify-between p-5 rounded-2xl border border-gray-100 bg-gray-50 hover:bg-white hover:shadow-md transition group"
+            >
+              <div className="flex items-center mb-4 md:mb-0">
+                <div className="w-12 h-12 bg-brand-anthracite/5 rounded-xl flex items-center justify-center text-brand-anthracite mr-4 group-hover:bg-brand-yellow transition">
+                  <PlayCircle className="w-6 h-6" />
+                </div>
+                <div>
+                  <span className="text-xs font-bold text-gray-400 uppercase tracking-wider">Paso 05</span>
+                  <h3 className="font-bold text-brand-anthracite text-lg">(Opcional) Vídeo explicativo</h3>
+                </div>
+              </div>
+              <button 
+                onClick={handleVideoClick}
+                className="w-full md:w-auto px-6 py-2.5 bg-brand-yellow text-brand-anthracite font-bold rounded-lg text-sm hover:bg-brand-yellow/90 transition text-center shadow-sm min-w-[180px]"
+              >
+                Ver explicación rápida
+              </button>
+            </div>
           </div>
+
+          {/* Video Section */}
+          <section
+            id="video-explicativo"
+            className="scroll-mt-24 p-6 md:p-10 border-t border-gray-200 bg-white"
+          >
+            <div className="text-center mb-6">
+              <h2 className="text-2xl font-bold text-brand-anthracite">
+                Vídeo explicativo del Kit de Migración
+              </h2>
+              <p className="mt-2 text-gray-600">
+                Antes de revisar los documentos, te recomendamos ver este vídeo para entender cómo utilizar el Kit y preparar mejor la migración de tu taller.
+              </p>
+            </div>
+
+            <div className="relative w-full overflow-hidden rounded-2xl shadow-lg aspect-video bg-black">
+              <iframe
+                src="https://player.vimeo.com/video/1208127573"
+                title="Vídeo explicativo del Kit de Migración PRO Integra360"
+                className="absolute inset-0 h-full w-full border-0"
+                allow="autoplay; fullscreen; picture-in-picture"
+                allowFullScreen
+              />
+            </div>
+          </section>
 
           {/* CTA Section */}
           <div className="bg-gray-50 p-8 md:p-10 border-t border-gray-200 text-center">

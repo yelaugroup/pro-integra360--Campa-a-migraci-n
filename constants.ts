@@ -9,7 +9,7 @@ export const CONFIG = {
   EXTENDED_CALENDLY_URL: "https://calendly.com/ivan_nieto_mentor/reunion-extendida-pro-integra-360",
   KIT_FILES: {
     KIT_PDF: "/files/prointegra360-kit.pdf",
-    CHECKLIST_PDF: "/files/prointegra360-checklist.xlsx",
+    CHECKLIST_EXCEL: "/files/prointegra360-checklist.xlsx",
     PLANTILLA_EXCEL: "/files/prointegra360-plantilla.xlsx",
     KIT_VISUAL_PDF: "/files/prointegra360-kit-visual.pdf",
   },
