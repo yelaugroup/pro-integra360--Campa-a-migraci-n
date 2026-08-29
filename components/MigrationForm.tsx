@@ -23,6 +23,7 @@ const MigrationForm: React.FC = () => {
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
     const { name, value, type } = e.target;
+    if (error) setError(null);
     if (type === 'checkbox') {
       const checked = (e.target as HTMLInputElement).checked;
       setFormData(prev => ({ ...prev, [name]: checked }));
@@ -39,6 +40,18 @@ const MigrationForm: React.FC = () => {
     // Basic spam check
     if (formData.nombre.length < 2) {
       setError("Por favor, introduce un nombre válido.");
+      setLoading(false);
+      return;
+    }
+
+    if (!formData.consentPrivacidad) {
+      setError("Debes aceptar la Política de Privacidad para continuar.");
+      setLoading(false);
+      return;
+    }
+
+    if (!formData.consentContactoDirecto) {
+      setError("Debes aceptar el contacto por teléfono/WhatsApp para continuar.");
       setLoading(false);
       return;
     }
@@ -215,19 +228,26 @@ const MigrationForm: React.FC = () => {
       </div>
 
       <div className="space-y-4 pt-4 border-t border-gray-200">
-        <label className="flex items-start cursor-pointer group">
-          <input
-            required
-            name="consentPrivacidad"
-            type="checkbox"
-            checked={formData.consentPrivacidad}
-            onChange={handleChange}
-            className="mt-1 w-4 h-4 text-brand-anthracite border-gray-300 rounded focus:ring-brand-yellow accent-brand"
-          />
-          <span className="ml-3 text-sm text-gray-600 group-hover:text-brand-anthracite transition">
-            He leído y acepto la <Link to="/politica-privacidad" className="text-brand-anthracite font-semibold underline">Política de Privacidad</Link> *
-          </span>
-        </label>
+        <div>
+          <label className="flex items-start cursor-pointer group">
+            <input
+              required
+              name="consentPrivacidad"
+              type="checkbox"
+              checked={formData.consentPrivacidad}
+              onChange={handleChange}
+              className="mt-1 w-4 h-4 text-brand-anthracite border-gray-300 rounded focus:ring-brand-yellow accent-brand"
+            />
+            <span className="ml-3 text-sm text-gray-600 group-hover:text-brand-anthracite transition">
+              He leído y acepto la <Link to="/politica-privacidad" className="text-brand-anthracite font-semibold underline">Política de Privacidad</Link> *
+            </span>
+          </label>
+          {error === "Debes aceptar la Política de Privacidad para continuar." && (
+            <p className="mt-1 ml-7 text-xs text-red-600 font-medium">
+              Debes aceptar la Política de Privacidad para continuar.
+            </p>
+          )}
+        </div>
 
         <label className="flex items-start cursor-pointer group">
           <input
@@ -242,18 +262,26 @@ const MigrationForm: React.FC = () => {
           </span>
         </label>
 
-        <label className="flex items-start cursor-pointer group">
-          <input
-            name="consentContactoDirecto"
-            type="checkbox"
-            checked={formData.consentContactoDirecto}
-            onChange={handleChange}
-            className="mt-1 w-4 h-4 text-brand-anthracite border-gray-300 rounded focus:ring-brand-yellow accent-brand"
-          />
-          <span className="ml-3 text-sm text-gray-600 group-hover:text-brand-anthracite transition">
-            Acepto que me contactéis por teléfono/WhatsApp para coordinar la demo.
-          </span>
-        </label>
+        <div>
+          <label className="flex items-start cursor-pointer group">
+            <input
+              required
+              name="consentContactoDirecto"
+              type="checkbox"
+              checked={formData.consentContactoDirecto}
+              onChange={handleChange}
+              className="mt-1 w-4 h-4 text-brand-anthracite border-gray-300 rounded focus:ring-brand-yellow accent-brand"
+            />
+            <span className="ml-3 text-sm text-gray-600 group-hover:text-brand-anthracite transition">
+              Acepto que me contactéis por teléfono/WhatsApp para coordinar la demo. *
+            </span>
+          </label>
+          {error === "Debes aceptar el contacto por teléfono/WhatsApp para continuar." && (
+            <p className="mt-1 ml-7 text-xs text-red-600 font-medium">
+              Debes aceptar el contacto por teléfono/WhatsApp para continuar.
+            </p>
+          )}
+        </div>
       </div>
 
       {!formData.consentMarketing && formData.email && (
