@@ -6,7 +6,7 @@ export const CONFIG = {
   UNSUBSCRIBE_URL: "https://sswebhook.yelaugroup.info/webhook/proi360-unsubscribe",
   EVENT_TRACK_URL: "https://sswebhook.yelaugroup.info/webhook/proi360-event",
   CALENDLY_URL: "https://calendly.com/pro-integra360/demo",
-  EXTENDED_CALENDLY_URL: "https://calendly.com/ivan_nieto_mentor/reunion-extendida-pro-integra-360",
+  EXTENDED_CALENDLY_URL: "https://calendly.com/ivan_nieto_mentor/reunion-inicial-pro-integra-360",
   KIT_FILES: {
     KIT_PDF: "/files/prointegra360-kit.pdf",
     CHECKLIST_EXCEL: "/files/prointegra360-checklist.xlsx",
