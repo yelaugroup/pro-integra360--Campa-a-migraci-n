@@ -14,12 +14,12 @@ const LandingPage: React.FC = () => {
   ];
 
   const benefits = [
-    "Migración asistida: Importamos tus datos sin errores.",
+    "Migración asistida: Te acompañamos en la importación y validación de tus datos.",
     "Multi-dispositivo: Accede desde PC, tablet o móvil.",
-    "Facturación electrónica integrada y automática.",
+    "Facturación integrada en el flujo de gestión del taller.",
     "Control de stock a tiempo real con alertas de reposición.",
     "Comunicación automática con el cliente (WhatsApp/SMS).",
-    "Informes financieros avanzados de rentabilidad."
+    "Indicadores e informes para analizar la rentabilidad del taller."
   ];
 
   const kitIncludes = [
@@ -34,7 +34,7 @@ const LandingPage: React.FC = () => {
     "Gestión de recambios con conexión directa a proveedores",
     "Cuadro de mando en tiempo real (KPIs de rentabilidad)",
     "Facturación electrónica y contabilidad integrada",
-    "Historial clínico del vehículo compartido en la red",
+    "Historial completo del vehículo accesible cuando lo necesitas",
     "Multi-dispositivo: Accede desde tablet en el taller o PC"
   ];
 
@@ -50,10 +50,10 @@ const LandingPage: React.FC = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           <div className="lg:w-2/3">
             <h1 className="text-4xl md:text-5xl font-extrabold text-brand-anthracite leading-tight mb-6">
-              Moderniza tu taller sin miedos ni parones operativos
+              Moderniza la gestión de tu taller sin miedos ni parones operativos
             </h1>
             <p className="text-xl text-slate-600 mb-8 max-w-2xl border-l-4 border-brand-yellow pl-4">
-              Descarga el <span className="font-bold text-brand-anthracite">Kit Estratégico de Migración</span> y descubre cómo pasar de tu viejo sistema a PRO Integra360 de forma segura.
+              Descarga el <span className="font-bold text-brand-anthracite">Kit Estratégico de Migración</span> y descubre cómo dar el paso hacia una gestión más moderna, organizada y eficiente de tu taller.
             </p>
             <div className="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4">
               <a 
@@ -74,7 +74,7 @@ const LandingPage: React.FC = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
             <h2 className="text-3xl font-bold text-brand-anthracite">¿Sientes que tu software te está frenando?</h2>
-            <p className="text-gray-600 mt-4">Cambiar de software asusta, pero quedarse atrás sale caro.</p>
+            <p className="text-gray-600 mt-4">Cuando la gestión no evoluciona al ritmo del taller, los problemas empiezan a acumularse.</p>
           </div>
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
             {problems.map((p, i) => (
@@ -92,7 +92,7 @@ const LandingPage: React.FC = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid lg:grid-cols-2 gap-16 items-center">
             <div>
-              <h2 className="text-3xl font-bold mb-8 text-brand-yellow uppercase tracking-tight">Por qué los talleres eligen PRO Integra360</h2>
+              <h2 className="text-3xl font-bold mb-8 text-brand-yellow uppercase tracking-tight">UNA FORMA MUCHO MEJOR DE GESTIONAR TU TALLER</h2>
               <div className="grid gap-6">
                 {benefits.map((b, i) => (
                   <div key={i} className="flex items-center group">
@@ -186,7 +186,7 @@ const LandingPage: React.FC = () => {
             </div>
             <div>
               <h4 className="font-bold text-lg mb-2 text-brand-anthracite">¿Es difícil de aprender?</h4>
-              <p className="text-gray-600">PRO Integra360 tiene una curva de aprendizaje mínima. La mayoría de los operarios dominan el sistema en menos de 2 días.</p>
+              <p className="text-gray-600">PRO Integra360 está diseñado para que la curva de aprendizaje sea sencilla y el equipo pueda adaptarse progresivamente con acompañamiento.</p>
             </div>
             <div>
               <h4 className="font-bold text-lg mb-2 text-brand-anthracite">¿Tengo permanencia?</h4>
@@ -194,7 +194,7 @@ const LandingPage: React.FC = () => {
             </div>
             <div>
               <h4 className="font-bold text-lg mb-2 text-brand-anthracite">¿El kit es realmente gratis?</h4>
-              <p className="text-gray-600">Sí, es un material educativo que compartimos para ayudar a profesionalizar el sector en España.</p>
+              <p className="text-gray-600">Sí. El Kit de Migración es completamente gratuito e incluye las herramientas indicadas en esta página para ayudarte a analizar y preparar una posible evolución de la gestión de tu taller.</p>
             </div>
             <div>
               <h4 className="font-bold text-lg mb-2 text-brand-anthracite">¿Funciona en Mac?</h4>

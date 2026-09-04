@@ -50,12 +50,6 @@ const MigrationForm: React.FC = () => {
       return;
     }
 
-    if (!formData.consentContactoDirecto) {
-      setError("Debes aceptar el contacto por teléfono/WhatsApp para continuar.");
-      setLoading(false);
-      return;
-    }
-
     const utmParams = new URLSearchParams(window.location.search);
     
     const payload: FormSubmissionPayload = {
@@ -262,26 +256,18 @@ const MigrationForm: React.FC = () => {
           </span>
         </label>
 
-        <div>
-          <label className="flex items-start cursor-pointer group">
-            <input
-              required
-              name="consentContactoDirecto"
-              type="checkbox"
-              checked={formData.consentContactoDirecto}
-              onChange={handleChange}
-              className="mt-1 w-4 h-4 text-brand-anthracite border-gray-300 rounded focus:ring-brand-yellow accent-brand"
-            />
-            <span className="ml-3 text-sm text-gray-600 group-hover:text-brand-anthracite transition">
-              Acepto que me contactéis por teléfono/WhatsApp para coordinar la demo. *
-            </span>
-          </label>
-          {error === "Debes aceptar el contacto por teléfono/WhatsApp para continuar." && (
-            <p className="mt-1 ml-7 text-xs text-red-600 font-medium">
-              Debes aceptar el contacto por teléfono/WhatsApp para continuar.
-            </p>
-          )}
-        </div>
+        <label className="flex items-start cursor-pointer group">
+          <input
+            name="consentContactoDirecto"
+            type="checkbox"
+            checked={formData.consentContactoDirecto}
+            onChange={handleChange}
+            className="mt-1 w-4 h-4 text-brand-anthracite border-gray-300 rounded focus:ring-brand-yellow accent-brand"
+          />
+          <span className="ml-3 text-sm text-gray-600 group-hover:text-brand-anthracite transition">
+            Acepto que me contactéis por teléfono/WhatsApp para coordinar la demo.
+          </span>
+        </label>
       </div>
 
       {!formData.consentMarketing && formData.email && (
