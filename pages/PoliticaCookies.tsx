@@ -1,7 +1,39 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { CONFIG } from '../constants';
+import { getCookieConsent, setCookieConsent, CookieConsentStatus, COOKIE_CONSENT_EVENT } from '../services/cookieConsent';
+import { enableTikTokPixel, revokeTikTokConsent } from '../services/tiktokPixel';
 
 const PoliticaCookies: React.FC = () => {
+  const [consentStatus, setConsentStatus] = useState<CookieConsentStatus>(null);
+  const [notification, setNotification] = useState<string | null>(null);
+
+  useEffect(() => {
+    setConsentStatus(getCookieConsent());
+
+    const handleConsentChange = () => {
+      setConsentStatus(getCookieConsent());
+    };
+
+    window.addEventListener(COOKIE_CONSENT_EVENT, handleConsentChange);
+    return () => {
+      window.removeEventListener(COOKIE_CONSENT_EVENT, handleConsentChange);
+    };
+  }, []);
+
+  const handleUpdateConsent = (newStatus: 'accepted' | 'rejected') => {
+    setCookieConsent(newStatus);
+    setConsentStatus(newStatus);
+    if (newStatus === 'accepted') {
+      enableTikTokPixel(window.location.pathname);
+      setNotification('Has aceptado las cookies de marketing. Se ha activado la medición publicitaria.');
+    } else {
+      revokeTikTokConsent();
+      setNotification('Has rechazado las cookies no necesarias. Se ha revocado el consentimiento de marketing.');
+    }
+    setTimeout(() => {
+      setNotification(null);
+    }, 5000);
+  };
   return (
     <div className="py-20 bg-white">
       <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 prose prose-slate select-none">
@@ -30,13 +62,52 @@ const PoliticaCookies: React.FC = () => {
           </p>
 
           <h3 className="text-lg font-bold text-slate-800 mb-2">Cookies Analíticas y de Seguimiento de Eventos</h3>
-          <p className="text-gray-700 leading-relaxed mb-1">
-            Son aquellas cookies tratadas por nosotros o por terceros (como herramientas de analítica web) para cuantificar y auditar el número de visitas recibidas, el comportamiento de clics de los usuarios sobre las opciones de descarga del "Kit de Migración", el tiempo medio que dedican a evaluar los bloques estratégicos de consultoría y las tasas de clics de rebote. Esto nos ayuda a pulir y refinar el contenido que ofrecemos a los talleres mecánicos.
+          <p className="text-gray-700 leading-relaxed mb-4">
+            Son aquellas cookies tratadas por nosotros o por terceros (como TikTok Pixel o herramientas de analítica web) para cuantificar visitas, medir el rendimiento de campañas y evaluar el comportamiento de los usuarios sobre las opciones de descarga del "Kit de Migración". Estas cookies únicamente se activan cuando el usuario otorga expresamente su consentimiento.
           </p>
         </section>
 
+        {/* Panel interactivo de gestión de preferencias */}
+        <section className="mb-10 bg-gray-50 border border-gray-200 rounded-2xl p-6 shadow-sm">
+          <h2 className="text-xl font-bold text-slate-900 mb-3">Tus Preferencias de Cookies Actuales</h2>
+          <p className="text-gray-700 text-sm mb-4 leading-relaxed">
+            Puedes cambiar o revocar tu consentimiento sobre las cookies no necesarias y de marketing en cualquier momento utilizando los siguientes controles:
+          </p>
+          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 p-4 bg-white rounded-xl border border-gray-200 mb-4">
+            <div>
+              <p className="text-xs text-gray-500 uppercase tracking-wider font-semibold">Estado actual</p>
+              <p className="font-bold text-base text-brand-anthracite mt-0.5">
+                {consentStatus === 'accepted' && <span className="text-green-600">✓ Cookies de marketing: ACEPTADAS</span>}
+                {consentStatus === 'rejected' && <span className="text-slate-600">✗ Cookies de marketing: RECHAZADAS (Solo necesarias)</span>}
+                {consentStatus === null && <span className="text-amber-600">⚠ No configurado (Pendiente de elección)</span>}
+              </p>
+            </div>
+            <div className="flex flex-wrap items-center gap-2">
+              <button
+                type="button"
+                onClick={() => handleUpdateConsent('rejected')}
+                className="px-4 py-2 text-sm font-medium rounded-lg border border-gray-300 text-gray-700 hover:bg-gray-100 transition"
+              >
+                Rechazar no necesarias
+              </button>
+              <button
+                type="button"
+                onClick={() => handleUpdateConsent('accepted')}
+                className="px-4 py-2 text-sm font-bold rounded-lg bg-brand-yellow text-brand-anthracite hover:opacity-90 transition shadow-sm"
+              >
+                Aceptar cookies de marketing
+              </button>
+            </div>
+          </div>
+          {notification && (
+            <p className="text-xs text-green-700 bg-green-50 border border-green-200 rounded-lg p-2.5 font-medium animate-fadeIn">
+              {notification}
+            </p>
+          )}
+        </section>
+
         <section className="mb-8">
-          <h2 className="text-xl font-bold text-slate-900 mb-4">3. Gestión, Bloqueo y Desactivación de Cookies</h2>
+          <h2 className="text-xl font-bold text-slate-900 mb-4">3. Gestión, Bloqueo y Desactivación de Cookies en el Navegador</h2>
           <p className="text-gray-700 leading-relaxed mb-4">
             El usuario tiene la total potestad de permitir, bloquear o eliminar las cookies instaladas en su equipo mediante la configuración manual de las opciones del navegador que utilice en cada momento:
           </p>

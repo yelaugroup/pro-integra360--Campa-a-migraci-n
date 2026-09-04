@@ -7,6 +7,8 @@ export const CONFIG = {
   EVENT_TRACK_URL: "https://sswebhook.yelaugroup.info/webhook/proi360-event",
   CALENDLY_URL: "https://calendly.com/pro-integra360/demo",
   EXTENDED_CALENDLY_URL: "https://calendly.com/ivan_nieto_mentor/reunion-inicial-pro-integra-360",
+  TIKTOK_PIXEL_ID: "DADAIDBC77UC8FLJLF8G",
+  COOKIE_CONSENT_KEY: "proi360_cookie_consent",
   KIT_FILES: {
     KIT_PDF: "/files/prointegra360-kit.pdf",
     CHECKLIST_EXCEL: "/files/prointegra360-checklist.xlsx",

@@ -10,21 +10,34 @@ import PoliticaCookies from './pages/PoliticaCookies';
 import UnsubscribePage from './pages/UnsubscribePage';
 import Header from './components/Header';
 import Footer from './components/Footer';
+import CookieBanner from './components/CookieBanner';
+import { initTikTokSnippet, enableTikTokPixel, trackTikTokPageView } from './services/tiktokPixel';
+import { hasMarketingConsent } from './services/cookieConsent';
 
-const ScrollToTop: React.FC = () => {
+const PageTracker: React.FC = () => {
   const { pathname } = useLocation();
 
   useEffect(() => {
     window.scrollTo(0, 0);
+    if (hasMarketingConsent()) {
+      trackTikTokPageView(pathname);
+    }
   }, [pathname]);
 
   return null;
 };
 
 const App: React.FC = () => {
+  useEffect(() => {
+    initTikTokSnippet();
+    if (hasMarketingConsent()) {
+      enableTikTokPixel(window.location.pathname);
+    }
+  }, []);
+
   return (
     <div className="min-h-screen flex flex-col bg-gray-50">
-      <ScrollToTop />
+      <PageTracker />
       <Header />
       <main className="flex-grow w-full">
         <Routes>
@@ -42,6 +55,7 @@ const App: React.FC = () => {
         </Routes>
       </main>
       <Footer />
+      <CookieBanner />
     </div>
   );
 };
