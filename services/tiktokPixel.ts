@@ -150,3 +150,33 @@ export const trackTikTokPageView = (pathname: string): void => {
     lastTrackedPathname = pathname;
   }
 };
+
+/**
+ * Tracks the standard TikTok 'SubmitForm' conversion event upon successful form submission.
+ * - Strictly checks that marketing consent is granted.
+ * - Ensures the TikTok pixel is enabled and loaded.
+ * - Sends NO personal data or identifiers.
+ * - Fails silently to prevent ever interrupting the user experience or form flow.
+ */
+export const trackTikTokSubmitForm = (): void => {
+  if (typeof window === 'undefined') return;
+
+  try {
+    // 1. Strictly require marketing cookie consent
+    if (!hasMarketingConsent()) {
+      return;
+    }
+
+    // 2. Ensure pixel snippet and pixel ID are loaded and ready
+    enableTikTokPixel();
+
+    // 3. Trigger the standard SubmitForm event (without any personal data)
+    if (window.ttq && typeof window.ttq.track === 'function') {
+      window.ttq.track('SubmitForm');
+    }
+  } catch (error) {
+    // 4 & 5. Fail silently; never block the application or form flow
+    console.error('Error tracking TikTok SubmitForm event:', error);
+  }
+};
+

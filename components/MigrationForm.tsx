@@ -2,6 +2,7 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { CONFIG, FormSubmissionPayload } from '../constants';
+import { trackTikTokSubmitForm } from '../services/tiktokPixel';
 
 const MigrationForm: React.FC = () => {
   const navigate = useNavigate();
@@ -34,6 +35,7 @@ const MigrationForm: React.FC = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (loading) return;
     setLoading(true);
     setError(null);
 
@@ -90,13 +92,16 @@ const MigrationForm: React.FC = () => {
 
       if (!response.ok) throw new Error("Error al enviar los datos");
       
+      // Registrar evento de conversión de TikTok (SubmitForm) solo en envío exitoso
+      trackTikTokSubmitForm();
+
       // Save email for later tracking in the Kit page
       localStorage.setItem('proi360_user_email', formData.email);
       
       navigate('/kit-migracion');
     } catch (err) {
       console.error(err);
-      navigate('/kit-migracion');
+      setError("No hemos podido procesar tu solicitud en este momento. Tus datos no se han perdido. Por favor, inténtalo de nuevo en unos instantes.");
     } finally {
       setLoading(false);
     }
