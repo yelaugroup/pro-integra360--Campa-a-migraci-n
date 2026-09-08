@@ -10,13 +10,9 @@ const MigrationForm: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
   const [formData, setFormData] = useState({
     nombre: '',
-    apellidos: '',
     taller: '',
-    provincia: '',
-    ciudad: '',
-    telefono: '',
     email: '',
-    preocupacion: '',
+    telefono: '',
     consentPrivacidad: false,
     consentMarketing: false,
     consentContactoDirecto: false,
@@ -39,9 +35,21 @@ const MigrationForm: React.FC = () => {
     setLoading(true);
     setError(null);
 
-    // Basic spam check
-    if (formData.nombre.length < 2) {
+    // Basic validation
+    if (formData.nombre.trim().length < 2) {
       setError("Por favor, introduce un nombre válido.");
+      setLoading(false);
+      return;
+    }
+
+    if (formData.taller.trim().length < 2) {
+      setError("Por favor, introduce el nombre de tu taller.");
+      setLoading(false);
+      return;
+    }
+
+    if (!formData.email.trim()) {
+      setError("Por favor, introduce tu email profesional.");
       setLoading(false);
       return;
     }
@@ -55,14 +63,14 @@ const MigrationForm: React.FC = () => {
     const utmParams = new URLSearchParams(window.location.search);
     
     const payload: FormSubmissionPayload = {
-      nombre: formData.nombre,
-      apellidos: formData.apellidos,
-      taller: formData.taller,
-      provincia: formData.provincia,
-      ciudad: formData.ciudad,
-      telefono: formData.telefono,
-      email: formData.email,
-      preocupacion: formData.preocupacion,
+      nombre: formData.nombre.trim(),
+      apellidos: "",
+      taller: formData.taller.trim(),
+      provincia: "",
+      ciudad: "",
+      telefono: formData.telefono.trim(),
+      email: formData.email.trim(),
+      preocupacion: "",
       consents: {
         privacidad: formData.consentPrivacidad,
         marketing: formData.consentMarketing,
@@ -96,7 +104,7 @@ const MigrationForm: React.FC = () => {
       trackTikTokSubmitForm();
 
       // Save email for later tracking in the Kit page
-      localStorage.setItem('proi360_user_email', formData.email);
+      localStorage.setItem('proi360_user_email', formData.email.trim());
       
       navigate('/kit-migracion');
     } catch (err) {
@@ -113,6 +121,10 @@ const MigrationForm: React.FC = () => {
 
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
+      <p className="text-sm text-gray-600 font-medium">
+        Recibirás gratuitamente la guía, checklist y plantilla de migración.
+      </p>
+
       {error && (
         <div className="bg-red-50 text-red-700 p-4 rounded-lg border border-red-100 text-sm">
           {error}
@@ -133,21 +145,6 @@ const MigrationForm: React.FC = () => {
           />
         </div>
         <div>
-          <label className={labelClasses}>Apellidos *</label>
-          <input
-            required
-            name="apellidos"
-            value={formData.apellidos}
-            onChange={handleChange}
-            type="text"
-            className={inputClasses}
-            placeholder="Tus apellidos"
-          />
-        </div>
-      </div>
-
-      <div className="grid md:grid-cols-2 gap-6">
-        <div>
           <label className={labelClasses}>Nombre del taller *</label>
           <input
             required
@@ -159,71 +156,32 @@ const MigrationForm: React.FC = () => {
             placeholder="Ej: Talleres Martínez"
           />
         </div>
+      </div>
+
+      <div className="grid md:grid-cols-2 gap-6">
         <div>
-          <label className={labelClasses}>Teléfono *</label>
+          <label className={labelClasses}>Email profesional *</label>
           <input
             required
+            name="email"
+            value={formData.email}
+            onChange={handleChange}
+            type="email"
+            className={inputClasses}
+            placeholder="email@taller.com"
+          />
+        </div>
+        <div>
+          <label className={labelClasses}>Teléfono</label>
+          <input
             name="telefono"
             value={formData.telefono}
             onChange={handleChange}
             type="tel"
             className={inputClasses}
-            placeholder="600 000 000"
+            placeholder="600 000 000 (opcional)"
           />
         </div>
-      </div>
-
-      <div>
-        <label className={labelClasses}>Email profesional *</label>
-        <input
-          required
-          name="email"
-          value={formData.email}
-          onChange={handleChange}
-          type="email"
-          className={inputClasses}
-          placeholder="email@taller.com"
-        />
-      </div>
-
-      <div className="grid md:grid-cols-2 gap-6">
-        <div>
-          <label className={labelClasses}>Provincia *</label>
-          <select
-            required
-            name="provincia"
-            value={formData.provincia}
-            onChange={handleChange}
-            className={inputClasses}
-          >
-            <option value="" className="text-gray-900">Selecciona...</option>
-            {CONFIG.PROVINCIAS_ESPANA.map(p => <option key={p} value={p} className="text-gray-900">{p}</option>)}
-          </select>
-        </div>
-        <div>
-          <label className={labelClasses}>Ciudad *</label>
-          <input
-            required
-            name="ciudad"
-            value={formData.ciudad}
-            onChange={handleChange}
-            type="text"
-            className={inputClasses}
-            placeholder="Ciudad"
-          />
-        </div>
-      </div>
-
-      <div>
-        <label className={labelClasses}>¿Qué te preocupa más del cambio? (Opcional)</label>
-        <textarea
-          name="preocupacion"
-          value={formData.preocupacion}
-          onChange={handleChange}
-          rows={3}
-          className={inputClasses}
-          placeholder="Ej: Perder datos, tiempo de formación..."
-        />
       </div>
 
       <div className="space-y-4 pt-4 border-t border-gray-200">
@@ -238,7 +196,7 @@ const MigrationForm: React.FC = () => {
               className="mt-1 w-4 h-4 text-brand-anthracite border-gray-300 rounded focus:ring-brand-yellow accent-brand"
             />
             <span className="ml-3 text-sm text-gray-600 group-hover:text-brand-anthracite transition">
-              He leído y acepto la <Link to="/politica-privacidad" className="text-brand-anthracite font-semibold underline">Política de Privacidad</Link> *
+              He leído y acepto la <Link to="/politica-privacidad" className="text-brand-anthracite font-semibold underline">Política de Privacidad</Link>. *
             </span>
           </label>
           {error === "Debes aceptar la Política de Privacidad para continuar." && (
@@ -257,7 +215,7 @@ const MigrationForm: React.FC = () => {
             className="mt-1 w-4 h-4 text-brand-anthracite border-gray-300 rounded focus:ring-brand-yellow accent-brand"
           />
           <span className="ml-3 text-sm text-gray-600 group-hover:text-brand-anthracite transition">
-            Quiero recibir por email el Kit y comunicaciones comerciales sobre {CONFIG.BRAND_NAME}. Puedo darme de baja en cualquier momento.
+            Quiero recibir por email contenidos y comunicaciones de PRO Integra360 sobre gestión, organización y rentabilidad del taller. Puedo darme de baja en cualquier momento.
           </span>
         </label>
 
@@ -270,16 +228,10 @@ const MigrationForm: React.FC = () => {
             className="mt-1 w-4 h-4 text-brand-anthracite border-gray-300 rounded focus:ring-brand-yellow accent-brand"
           />
           <span className="ml-3 text-sm text-gray-600 group-hover:text-brand-anthracite transition">
-            Acepto que me contactéis por teléfono/WhatsApp para coordinar la demo.
+            Quiero que PRO Integra360 pueda contactarme por teléfono o WhatsApp para orientarme sobre mi caso.
           </span>
         </label>
       </div>
-
-      {!formData.consentMarketing && formData.email && (
-        <p className="text-xs text-brand-anthracite bg-brand-yellow/20 p-2 rounded border border-brand-yellow/30">
-          Nota: Si no marcas la casilla de marketing, no podremos enviarte el Kit por email. Solo te contactaremos por el medio que autorices para la demo.
-        </p>
-      )}
 
       <button
         type="submit"
