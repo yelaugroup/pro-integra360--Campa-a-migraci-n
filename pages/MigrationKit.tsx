@@ -211,36 +211,18 @@ const MigrationKit: React.FC = () => {
 
           {/* CTA Section */}
           <div className="bg-gray-50 p-8 md:p-10 border-t border-gray-200 text-center">
-            <p className="text-gray-500 text-sm mb-6 italic">Cada vez más talleres ya están utilizando este sistema para mejorar su rentabilidad.</p>
-            <div className="mb-10 text-center space-y-2">
-              <p className="text-brand-anthracite font-bold text-lg">⚠️ Si no aplicas esto, no cambia nada.</p>
-              <p className="text-gray-600">Este kit no funciona solo.<br />Funciona cuando lo implementas en tu taller.</p>
-              <p className="text-gray-600 pt-4">👇 Siguiente paso:</p>
-            </div>
-            
-            <div className="bg-brand-yellow p-8 rounded-3xl shadow-xl transform hover:scale-[1.02] transition">
-              <h3 className="text-2xl font-bold text-brand-anthracite mb-1">
-                Te enseñamos cómo aplicarlo en tu taller
-              </h3>
-              <span className="text-brand-anthracite/80 font-bold uppercase tracking-wider text-xs block mb-4">
-                Sesión estratégica gratuita para talleres<br />
-                Duración aproximada: 2 horas
-              </span>
-              <div className="text-brand-anthracite/80 mb-8 max-w-md mx-auto text-left md:text-center inline-block">
-                <p className="font-bold mb-2">Durante esta sesión veremos:</p>
-                <ul className="space-y-1 inline-block text-left">
-                  <li>✓ cómo detectar pérdidas invisibles</li>
-                  <li>✓ qué procesos están frenando tu crecimiento</li>
-                  <li>✓ qué deberías cambiar primero</li>
-                  <li>✓ cómo organizar mejor recepción, operativa y facturación</li>
-                  <li>✓ cómo aplicar un sistema real en tu taller</li>
-                </ul>
-              </div>
+            <div className="bg-brand-yellow p-8 md:p-10 rounded-3xl shadow-xl max-w-2xl mx-auto transform hover:scale-[1.01] transition">
+              <h2 className="text-2xl md:text-3xl font-bold text-brand-anthracite mb-4 leading-tight">
+                Ya tienes las herramientas. ¿Quieres que revisemos contigo cómo aplicar todo esto a tu taller?
+              </h2>
+              <p className="text-brand-anthracite/90 text-base md:text-lg mb-8 max-w-xl mx-auto">
+                Podemos revisar tu situación, tus procesos y la forma más segura de plantear una posible migración, sin compromiso.
+              </p>
               <a 
-                href={CONFIG.EXTENDED_CALENDLY_URL}
+                href="https://calendly.com/prointegra360-info/30min"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center justify-center bg-brand-anthracite text-white px-10 py-4 rounded-xl font-bold text-lg hover:opacity-90 transition shadow-lg group w-full"
+                className="inline-flex items-center justify-center bg-brand-anthracite text-white px-8 py-4 rounded-xl font-bold text-base md:text-lg hover:opacity-90 transition shadow-lg group w-full sm:w-auto"
               >
                 <Calendar className="mr-2 w-5 h-5" />
                 Reservar sesión estratégica gratuita

@@ -60,6 +60,12 @@ const MigrationForm: React.FC = () => {
       return;
     }
 
+    if (!formData.telefono.trim()) {
+      setError("Indica un teléfono de contacto.");
+      setLoading(false);
+      return;
+    }
+
     const utmParams = new URLSearchParams(window.location.search);
     
     const payload: FormSubmissionPayload = {
@@ -172,15 +178,21 @@ const MigrationForm: React.FC = () => {
           />
         </div>
         <div>
-          <label className={labelClasses}>Teléfono</label>
+          <label className={labelClasses}>Teléfono / WhatsApp *</label>
           <input
+            required
             name="telefono"
             value={formData.telefono}
             onChange={handleChange}
             type="tel"
             className={inputClasses}
-            placeholder="600 000 000 (opcional)"
+            placeholder="600 000 000"
           />
+          {error === "Indica un teléfono de contacto." && (
+            <p className="mt-1 text-xs text-red-600 font-medium">
+              Indica un teléfono de contacto.
+            </p>
+          )}
         </div>
       </div>
 
@@ -206,31 +218,39 @@ const MigrationForm: React.FC = () => {
           )}
         </div>
 
-        <label className="flex items-start cursor-pointer group">
-          <input
-            name="consentMarketing"
-            type="checkbox"
-            checked={formData.consentMarketing}
-            onChange={handleChange}
-            className="mt-1 w-4 h-4 text-brand-anthracite border-gray-300 rounded focus:ring-brand-yellow accent-brand"
-          />
-          <span className="ml-3 text-sm text-gray-600 group-hover:text-brand-anthracite transition">
-            Quiero recibir por email contenidos y comunicaciones de PRO Integra360 sobre gestión, organización y rentabilidad del taller. Puedo darme de baja en cualquier momento.
-          </span>
-        </label>
+        <div className="pt-2">
+          <p className="text-sm font-semibold text-brand-anthracite mb-3">
+            ¿Quieres que te ayudemos también después de descargar el Kit?
+          </p>
 
-        <label className="flex items-start cursor-pointer group">
-          <input
-            name="consentContactoDirecto"
-            type="checkbox"
-            checked={formData.consentContactoDirecto}
-            onChange={handleChange}
-            className="mt-1 w-4 h-4 text-brand-anthracite border-gray-300 rounded focus:ring-brand-yellow accent-brand"
-          />
-          <span className="ml-3 text-sm text-gray-600 group-hover:text-brand-anthracite transition">
-            Quiero que PRO Integra360 pueda contactarme por teléfono o WhatsApp para orientarme sobre mi caso.
-          </span>
-        </label>
+          <div className="space-y-3">
+            <label className="flex items-start cursor-pointer group">
+              <input
+                name="consentMarketing"
+                type="checkbox"
+                checked={formData.consentMarketing}
+                onChange={handleChange}
+                className="mt-1 w-4 h-4 text-brand-anthracite border-gray-300 rounded focus:ring-brand-yellow accent-brand"
+              />
+              <span className="ml-3 text-sm text-gray-600 group-hover:text-brand-anthracite transition">
+                Sí, quiero recibir por email una breve serie de consejos prácticos para migrar de software sin perder datos ni frenar el taller. Puedo darme de baja cuando quiera.
+              </span>
+            </label>
+
+            <label className="flex items-start cursor-pointer group">
+              <input
+                name="consentContactoDirecto"
+                type="checkbox"
+                checked={formData.consentContactoDirecto}
+                onChange={handleChange}
+                className="mt-1 w-4 h-4 text-brand-anthracite border-gray-300 rounded focus:ring-brand-yellow accent-brand"
+              />
+              <span className="ml-3 text-sm text-gray-600 group-hover:text-brand-anthracite transition">
+                Sí, quiero que un especialista de PRO Integra360 revise mi caso y me contacte por teléfono o WhatsApp para orientarme, sin compromiso.
+              </span>
+            </label>
+          </div>
+        </div>
       </div>
 
       <button
