@@ -42,36 +42,18 @@ const Header: React.FC = () => {
             className="h-12 w-auto object-contain"
           />
         </Link>
-        <nav className="hidden lg:flex space-x-8">
-          <a 
-            href="#potencia-operativa" 
-            onClick={(e) => handleNavClick(e, 'potencia-operativa')}
-            className="text-xs font-bold text-gray-500 hover:text-brand-anthracite transition uppercase tracking-wider"
-          >
-            Beneficios
-          </a>
-          <a 
-            href="#formulario-kit" 
-            onClick={(e) => handleNavClick(e, 'formulario-kit')}
-            className="text-xs font-bold text-gray-500 hover:text-brand-anthracite transition uppercase tracking-wider"
-          >
-            El Kit
-          </a>
-          <a 
-            href="#preguntas-frecuentes" 
-            onClick={(e) => handleNavClick(e, 'preguntas-frecuentes')}
-            className="text-xs font-bold text-gray-500 hover:text-brand-anthracite transition uppercase tracking-wider"
-          >
-            FAQ
-          </a>
+        <nav className="hidden md:flex items-center space-x-6">
+          <span className="text-xs font-semibold text-gray-500 uppercase tracking-wider">
+            Kit Estratégico Gratuito
+          </span>
         </nav>
         <div className="flex items-center space-x-4">
           <a 
             href="#formulario-kit" 
             onClick={(e) => handleNavClick(e, 'formulario-kit')}
-            className="bg-brand-yellow text-brand-anthracite px-6 py-2 rounded-full text-sm font-black hover:opacity-90 transition shadow-md border-2 border-brand-anthracite/10 uppercase tracking-tight"
+            className="bg-brand-yellow text-brand-anthracite px-5 sm:px-6 py-2 rounded-full text-xs sm:text-sm font-black hover:opacity-90 transition shadow-md border border-brand-anthracite/10 uppercase tracking-tight"
           >
-            Obtener Kit
+            Descargar Kit Gratis
           </a>
         </div>
       </div>

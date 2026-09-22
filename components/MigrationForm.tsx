@@ -1,13 +1,17 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { CONFIG, FormSubmissionPayload } from '../constants';
 import { trackTikTokSubmitForm } from '../services/tiktokPixel';
+import { trackFunnelEvent } from '../services/eventTracker';
+import { captureAndStoreUtms, getResolvedUtms } from '../services/utmManager';
 
 const MigrationForm: React.FC = () => {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const formStartedRef = useRef(false);
+  const formElementRef = useRef<HTMLFormElement>(null);
   const [formData, setFormData] = useState({
     nombre: '',
     taller: '',
@@ -18,14 +22,50 @@ const MigrationForm: React.FC = () => {
     consentContactoDirecto: false,
   });
 
+  // Al montar, capturar y almacenar en sessionStorage cualquier UTM presente en la URL
+  useEffect(() => {
+    captureAndStoreUtms();
+  }, []);
+
+  // Tracking: form_view cuando el formulario entra en viewport
+  useEffect(() => {
+    const el = formElementRef.current;
+    if (!el || typeof IntersectionObserver === 'undefined') return;
+
+    let viewed = false;
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting && !viewed) {
+          viewed = true;
+          trackFunnelEvent('form_view');
+        }
+      });
+    }, { threshold: 0.2 });
+
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
     const { name, value, type } = e.target;
+    
+    // Tracking: form_start en la primera interacción
+    if (!formStartedRef.current) {
+      formStartedRef.current = true;
+      trackFunnelEvent('form_start');
+    }
+
     if (error) setError(null);
     if (type === 'checkbox') {
       const checked = (e.target as HTMLInputElement).checked;
       setFormData(prev => ({ ...prev, [name]: checked }));
     } else {
-      setFormData(prev => ({ ...prev, [name]: value }));
+      if (name === 'telefono' && value.trim() === '') {
+        // Si se vacía el teléfono, desmarcar automáticamente el contacto directo
+        setFormData(prev => ({ ...prev, telefono: value, consentContactoDirecto: false }));
+      } else {
+        setFormData(prev => ({ ...prev, [name]: value }));
+      }
     }
   };
 
@@ -49,7 +89,7 @@ const MigrationForm: React.FC = () => {
     }
 
     if (!formData.email.trim()) {
-      setError("Por favor, introduce tu email profesional.");
+      setError("Por favor, introduce tu email.");
       setLoading(false);
       return;
     }
@@ -60,13 +100,9 @@ const MigrationForm: React.FC = () => {
       return;
     }
 
-    if (!formData.telefono.trim()) {
-      setError("Indica un teléfono de contacto.");
-      setLoading(false);
-      return;
-    }
-
-    const utmParams = new URLSearchParams(window.location.search);
+    // Resolver UTMs con fallback a sessionStorage si la URL ya no las tiene
+    const resolvedUtms = getResolvedUtms();
+    const hasPhone = formData.telefono.trim().length > 0;
     
     const payload: FormSubmissionPayload = {
       nombre: formData.nombre.trim(),
@@ -80,7 +116,7 @@ const MigrationForm: React.FC = () => {
       consents: {
         privacidad: formData.consentPrivacidad,
         marketing: formData.consentMarketing,
-        contactoDirecto: formData.consentContactoDirecto,
+        contactoDirecto: hasPhone ? formData.consentContactoDirecto : false,
       },
       metadata: {
         timestamp: new Date().toLocaleString('es-ES', { timeZone: 'Europe/Madrid' }),
@@ -88,11 +124,11 @@ const MigrationForm: React.FC = () => {
         user_agent: navigator.userAgent,
         ip: "unknown",
         utm: {
-          source: utmParams.get('utm_source'),
-          medium: utmParams.get('utm_medium'),
-          campaign: utmParams.get('utm_campaign'),
-          content: utmParams.get('utm_content'),
-          term: utmParams.get('utm_term'),
+          source: resolvedUtms.source,
+          medium: resolvedUtms.medium,
+          campaign: resolvedUtms.campaign,
+          content: resolvedUtms.content,
+          term: resolvedUtms.term,
         }
       }
     };
@@ -106,6 +142,9 @@ const MigrationForm: React.FC = () => {
 
       if (!response.ok) throw new Error("Error al enviar los datos");
       
+      // Tracking: form_submit_success
+      trackFunnelEvent('form_submit_success', { email: formData.email.trim() });
+
       // Registrar evento de conversión de TikTok (SubmitForm) solo en envío exitoso
       trackTikTokSubmitForm();
 
@@ -115,6 +154,7 @@ const MigrationForm: React.FC = () => {
       navigate('/kit-migracion');
     } catch (err) {
       console.error(err);
+      trackFunnelEvent('form_submit_error', { email: formData.email.trim() });
       setError("No hemos podido procesar tu solicitud en este momento. Tus datos no se han perdido. Por favor, inténtalo de nuevo en unos instantes.");
     } finally {
       setLoading(false);
@@ -122,22 +162,27 @@ const MigrationForm: React.FC = () => {
   };
 
   // Common classes for inputs to ensure white text and dark-friendly backgrounds
-  const inputClasses = "w-full px-4 py-2 rounded-lg border border-gray-400 bg-brand-anthracite text-white placeholder-gray-400 focus:ring-2 focus:ring-brand-yellow focus:border-transparent outline-none transition";
-  const labelClasses = "block text-sm font-semibold text-brand-anthracite mb-1";
+  const inputClasses = "w-full px-4 py-3 rounded-lg border border-gray-400 bg-brand-anthracite text-white placeholder-gray-400 focus:ring-2 focus:ring-brand-yellow focus:border-transparent outline-none transition text-base";
+  const labelClasses = "block text-sm font-semibold text-brand-anthracite mb-1.5";
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-6">
-      <p className="text-sm text-gray-600 font-medium">
-        Recibirás gratuitamente la guía, checklist y plantilla de migración.
-      </p>
+    <form ref={formElementRef} onSubmit={handleSubmit} className="space-y-6">
+      <div className="mb-2">
+        <h3 className="text-2xl font-black text-brand-anthracite uppercase tracking-tight">
+          RECIBE GRATIS EL KIT
+        </h3>
+        <p className="text-gray-600 text-sm mt-1">
+          Empieza analizando cómo trabaja hoy tu taller.
+        </p>
+      </div>
 
       {error && (
-        <div className="bg-red-50 text-red-700 p-4 rounded-lg border border-red-100 text-sm">
+        <div className="bg-red-50 text-red-700 p-4 rounded-lg border border-red-200 text-sm">
           {error}
         </div>
       )}
 
-      <div className="grid md:grid-cols-2 gap-6">
+      <div className="grid md:grid-cols-2 gap-5">
         <div>
           <label className={labelClasses}>Nombre *</label>
           <input
@@ -148,6 +193,7 @@ const MigrationForm: React.FC = () => {
             type="text"
             className={inputClasses}
             placeholder="Tu nombre"
+            autoComplete="given-name"
           />
         </div>
         <div>
@@ -160,13 +206,14 @@ const MigrationForm: React.FC = () => {
             type="text"
             className={inputClasses}
             placeholder="Ej: Talleres Martínez"
+            autoComplete="organization"
           />
         </div>
       </div>
 
-      <div className="grid md:grid-cols-2 gap-6">
+      <div className="grid md:grid-cols-2 gap-5">
         <div>
-          <label className={labelClasses}>Email profesional *</label>
+          <label className={labelClasses}>Email *</label>
           <input
             required
             name="email"
@@ -175,24 +222,23 @@ const MigrationForm: React.FC = () => {
             type="email"
             className={inputClasses}
             placeholder="email@taller.com"
+            autoComplete="email"
           />
         </div>
         <div>
-          <label className={labelClasses}>Teléfono / WhatsApp *</label>
+          <label className={labelClasses}>Teléfono / WhatsApp (opcional)</label>
           <input
-            required
             name="telefono"
             value={formData.telefono}
             onChange={handleChange}
             type="tel"
             className={inputClasses}
             placeholder="600 000 000"
+            autoComplete="tel"
           />
-          {error === "Indica un teléfono de contacto." && (
-            <p className="mt-1 text-xs text-red-600 font-medium">
-              Indica un teléfono de contacto.
-            </p>
-          )}
+          <p className="mt-1 text-xs text-gray-500 font-normal">
+            Solo si quieres que podamos ayudarte de forma más directa.
+          </p>
         </div>
       </div>
 
@@ -205,7 +251,7 @@ const MigrationForm: React.FC = () => {
               type="checkbox"
               checked={formData.consentPrivacidad}
               onChange={handleChange}
-              className="mt-1 w-4 h-4 text-brand-anthracite border-gray-300 rounded focus:ring-brand-yellow accent-brand"
+              className="mt-1 w-4 h-4 text-brand-anthracite border-gray-300 rounded focus:ring-brand-yellow accent-brand flex-shrink-0"
             />
             <span className="ml-3 text-sm text-gray-600 group-hover:text-brand-anthracite transition">
               He leído y acepto la <Link to="/politica-privacidad" className="text-brand-anthracite font-semibold underline">Política de Privacidad</Link>. *
@@ -230,22 +276,23 @@ const MigrationForm: React.FC = () => {
                 type="checkbox"
                 checked={formData.consentMarketing}
                 onChange={handleChange}
-                className="mt-1 w-4 h-4 text-brand-anthracite border-gray-300 rounded focus:ring-brand-yellow accent-brand"
+                className="mt-1 w-4 h-4 text-brand-anthracite border-gray-300 rounded focus:ring-brand-yellow accent-brand flex-shrink-0"
               />
               <span className="ml-3 text-sm text-gray-600 group-hover:text-brand-anthracite transition">
                 Sí, quiero recibir por email una breve serie de consejos prácticos para migrar de software sin perder datos ni frenar el taller. Puedo darme de baja cuando quiera.
               </span>
             </label>
 
-            <label className="flex items-start cursor-pointer group">
+            <label className={`flex items-start transition ${formData.telefono.trim() ? 'cursor-pointer group' : 'cursor-not-allowed opacity-50'}`}>
               <input
                 name="consentContactoDirecto"
                 type="checkbox"
-                checked={formData.consentContactoDirecto}
+                disabled={!formData.telefono.trim()}
+                checked={formData.telefono.trim() ? formData.consentContactoDirecto : false}
                 onChange={handleChange}
-                className="mt-1 w-4 h-4 text-brand-anthracite border-gray-300 rounded focus:ring-brand-yellow accent-brand"
+                className="mt-1 w-4 h-4 text-brand-anthracite border-gray-300 rounded focus:ring-brand-yellow accent-brand flex-shrink-0 disabled:cursor-not-allowed"
               />
-              <span className="ml-3 text-sm text-gray-600 group-hover:text-brand-anthracite transition">
+              <span className={`ml-3 text-sm text-gray-600 ${formData.telefono.trim() ? 'group-hover:text-brand-anthracite' : ''} transition`}>
                 Sí, quiero que un especialista de PRO Integra360 revise mi caso y me contacte por teléfono o WhatsApp para orientarme, sin compromiso.
               </span>
             </label>
@@ -253,13 +300,18 @@ const MigrationForm: React.FC = () => {
         </div>
       </div>
 
-      <button
-        type="submit"
-        disabled={loading}
-        className={`w-full py-4 px-8 rounded-xl text-brand-anthracite font-bold text-lg shadow-lg transition transform active:scale-95 ${loading ? 'bg-brand-yellow/50 cursor-not-allowed' : 'bg-brand-yellow hover:opacity-90'}`}
-      >
-        {loading ? 'Procesando...' : '¡Quiero el Kit de Migración!'}
-      </button>
+      <div className="pt-2">
+        <button
+          type="submit"
+          disabled={loading}
+          className={`w-full py-4 px-8 rounded-xl text-brand-anthracite font-black text-lg sm:text-xl shadow-lg transition transform active:scale-95 uppercase tracking-wide ${loading ? 'bg-brand-yellow/50 cursor-not-allowed' : 'bg-brand-yellow hover:opacity-90 hover:shadow-xl'}`}
+        >
+          {loading ? 'Procesando...' : 'DESCARGAR EL KIT GRATIS'}
+        </button>
+        <p className="text-center text-xs text-gray-500 mt-2.5 font-medium">
+          Gratis · Sin compromiso · Analiza primero, decide después.
+        </p>
+      </div>
 
       <p className="text-center text-xs text-gray-400">
         Tus datos están seguros. No compartimos información con terceros. Cumplimos con el RGPD.

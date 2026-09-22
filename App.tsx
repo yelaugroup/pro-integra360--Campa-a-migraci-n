@@ -13,16 +13,20 @@ import Footer from './components/Footer';
 import CookieBanner from './components/CookieBanner';
 import { initTikTokSnippet, enableTikTokPixel, trackTikTokPageView } from './services/tiktokPixel';
 import { hasMarketingConsent } from './services/cookieConsent';
+import { captureAndStoreUtms } from './services/utmManager';
 
 const PageTracker: React.FC = () => {
-  const { pathname } = useLocation();
+  const { pathname, search } = useLocation();
 
   useEffect(() => {
+    // Captura y almacena en sessionStorage cualquier UTM al entrar a cualquier ruta
+    captureAndStoreUtms();
+    
     window.scrollTo(0, 0);
     if (hasMarketingConsent()) {
       trackTikTokPageView(pathname);
     }
-  }, [pathname]);
+  }, [pathname, search]);
 
   return null;
 };
