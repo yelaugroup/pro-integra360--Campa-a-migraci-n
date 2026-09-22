@@ -392,14 +392,15 @@ const LandingPage: React.FC = () => {
           </div>
 
           {/* CTA secundario sutil (nunca compite visualmente con el CTA del kit) */}
-          <div className="flex justify-center">
+          <div className="flex flex-col items-center">
+            <p className="text-sm text-gray-600 mb-3 font-medium">
+              Si quieres hablar directamente con nosotros, llámanos.
+            </p>
             <a
-              href={CONFIG.CALENDLY_URL}
-              target="_blank"
-              rel="noopener noreferrer"
+              href="tel:+34910202910"
               className="inline-flex items-center justify-center px-6 py-3 rounded-lg border-2 border-brand-anthracite text-brand-anthracite font-bold text-sm uppercase tracking-wider hover:bg-brand-anthracite hover:text-white transition-colors duration-200"
             >
-              CONOCER PRO INTEGRA360
+              LLAMAR AL 910 20 29 10
             </a>
           </div>
 
