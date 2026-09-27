@@ -391,6 +391,25 @@ const LandingPage: React.FC = () => {
             </p>
           </div>
 
+          {/* Bloque web oficial PRO Integra360 */}
+          <div className="bg-white border border-gray-200 rounded-xl p-6 sm:p-8 max-w-2xl mx-auto shadow-sm mb-8 text-center">
+            <h3 className="text-xl sm:text-2xl font-black text-brand-anthracite uppercase tracking-tight mb-3">
+              ¿Quieres conocer mejor PRO Integra360?
+            </h3>
+            <p className="text-gray-700 text-base sm:text-lg leading-relaxed mb-4">
+              PRO Integra360 es un sistema de gestión pensado para ayudar a los talleres a mejorar su organización, controlar mejor la información y los procesos y dirigir el negocio con una visión más clara.
+            </p>
+            <p className="text-gray-700 text-base sm:text-lg leading-relaxed mb-6">
+              Si quieres conocer cómo funciona, sus principales áreas y la filosofía que hay detrás del sistema, puedes visitar nuestra web oficial.
+            </p>
+            <a
+              href="https://prointegra360.com/"
+              className="inline-flex items-center justify-center px-6 py-3 rounded-lg border-2 border-brand-anthracite text-brand-anthracite font-bold text-sm uppercase tracking-wider hover:bg-brand-anthracite hover:text-white transition-colors duration-200"
+            >
+              CONOCER PRO INTEGRA360
+            </a>
+          </div>
+
           {/* CTA secundario sutil (nunca compite visualmente con el CTA del kit) */}
           <div className="flex flex-col items-center">
             <p className="text-sm text-gray-600 mb-3 font-medium">
