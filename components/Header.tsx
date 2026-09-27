@@ -37,7 +37,7 @@ const Header: React.FC = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
         <Link to="/" className="flex items-center">
           <img 
-            src="https://mentorias.ivannieto.com/wp-content/uploads/2025/09/PRO-Integra360-logo-transparente-ivannieto-1.png" 
+            src="/favicon.svg" 
             alt={CONFIG.BRAND_NAME} 
             className="h-12 w-auto object-contain"
           />

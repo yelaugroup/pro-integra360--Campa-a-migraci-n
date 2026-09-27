@@ -404,6 +404,8 @@ const LandingPage: React.FC = () => {
             </p>
             <a
               href="https://prointegra360.com/"
+              target="_blank"
+              rel="noopener noreferrer"
               className="inline-flex items-center justify-center px-6 py-3 rounded-lg border-2 border-brand-anthracite text-brand-anthracite font-bold text-sm uppercase tracking-wider hover:bg-brand-anthracite hover:text-white transition-colors duration-200"
             >
               CONOCER PRO INTEGRA360
