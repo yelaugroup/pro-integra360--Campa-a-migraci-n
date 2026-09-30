@@ -200,7 +200,7 @@ const MigrationKit: React.FC = () => {
 
             <div className="relative w-full overflow-hidden rounded-2xl shadow-lg aspect-video bg-black">
               <iframe
-                src="https://player.vimeo.com/video/1208127573"
+                src="https://player.vimeo.com/video/1231605064"
                 title="Vídeo explicativo del Kit de Migración PRO Integra360"
                 className="absolute inset-0 h-full w-full border-0"
                 allow="autoplay; fullscreen; picture-in-picture"
