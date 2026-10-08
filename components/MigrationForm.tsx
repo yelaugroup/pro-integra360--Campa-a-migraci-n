@@ -6,6 +6,8 @@ import { trackTikTokSubmitForm } from '../services/tiktokPixel';
 import { trackFunnelEvent } from '../services/eventTracker';
 import { captureAndStoreUtms, getResolvedUtms } from '../services/utmManager';
 
+declare const fbq: any;
+
 const MigrationForm: React.FC = () => {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
@@ -147,6 +149,10 @@ const MigrationForm: React.FC = () => {
 
       // Registrar evento de conversión de TikTok (SubmitForm) solo en envío exitoso
       trackTikTokSubmitForm();
+
+      if (typeof fbq === 'function') {
+        fbq('track', 'CompleteRegistration');
+      }
 
       // Save email for later tracking in the Kit page
       localStorage.setItem('proi360_user_email', formData.email.trim());
