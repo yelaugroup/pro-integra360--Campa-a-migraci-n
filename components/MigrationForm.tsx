@@ -18,10 +18,13 @@ import {
   AlertCircle,
   MessageSquare,
   Users,
-  Laptop
+  Laptop,
+  Check
 } from 'lucide-react';
 
 declare const fbq: any;
+
+const EXCLUSIVE_RETO = 'Solo quiero evaluar las herramientas del Kit';
 
 const RETOS_TALLER = [
   {
@@ -71,7 +74,7 @@ const MigrationForm: React.FC = () => {
     taller: '',
     email: '',
     // Segmentación
-    preocupacion: RETOS_TALLER[0].title,
+    retos_actuales: [] as string[],
     workshop_size: '3-5' as '1-2' | '3-5' | '6-10' | '10+',
     uses_management_software: true as boolean,
     // Contacto personalizado: 'whatsapp' | 'phone' | 'none'
@@ -119,6 +122,42 @@ const MigrationForm: React.FC = () => {
     setFormData(prev => ({ ...prev, [field]: value }));
   };
 
+  // Manejo de multiselección con opción exclusiva para los retos del Paso 3
+  const handleToggleReto = (title: string) => {
+    markFormStarted();
+    if (error) setError(null);
+
+    setFormData(prev => {
+      const current = prev.retos_actuales;
+      const isAlreadySelected = current.includes(title);
+
+      let nextRetos: string[];
+
+      if (title === EXCLUSIVE_RETO) {
+        if (isAlreadySelected) {
+          // Si hace clic en la exclusiva y ya estaba, se desmarca
+          nextRetos = [];
+        } else {
+          // Si selecciona la exclusiva, desmarca automáticamente todas las demás
+          nextRetos = [EXCLUSIVE_RETO];
+        }
+      } else {
+        if (isAlreadySelected) {
+          // Desmarcar esta opción normal
+          nextRetos = current.filter(r => r !== title);
+        } else {
+          // Marcar esta opción normal y desmarcar automáticamente la opción exclusiva si estuviera activa
+          nextRetos = [...current.filter(r => r !== EXCLUSIVE_RETO), title];
+        }
+      }
+
+      return {
+        ...prev,
+        retos_actuales: nextRetos,
+      };
+    });
+  };
+
   // Validaciones por paso
   const validateStep1 = (): boolean => {
     if (formData.nombre.trim().length < 2) {
@@ -142,8 +181,8 @@ const MigrationForm: React.FC = () => {
   };
 
   const validateStep3 = (): boolean => {
-    if (!formData.preocupacion) {
-      setError("Por favor, selecciona el principal reto de tu taller.");
+    if (!formData.retos_actuales || formData.retos_actuales.length === 0) {
+      setError("Por favor, selecciona al menos un reto para continuar.");
       return false;
     }
     if (!formData.workshop_size) {
@@ -230,7 +269,8 @@ const MigrationForm: React.FC = () => {
       ciudad: "",
       telefono: hasPhoneContact ? formData.telefono.trim() : "",
       email: formData.email.trim(),
-      preocupacion: formData.preocupacion.trim(),
+      "Retos actuales": formData.retos_actuales,
+      retos_actuales: formData.retos_actuales,
       contact_preference: (formData.contact_preference as 'whatsapp' | 'phone' | 'none') || 'none',
       workshop_size: formData.workshop_size,
       uses_management_software: formData.uses_management_software,
@@ -466,30 +506,35 @@ const MigrationForm: React.FC = () => {
             </p>
           </div>
 
-          {/* Pregunta 1: Principal preocupación / reto (campo existente 'preocupacion') */}
+          {/* Pregunta 1: Principal reto actual en el taller (multiselección con opción exclusiva) */}
           <div className="space-y-2">
-            <label className="block text-xs font-black uppercase tracking-wider text-gray-500">
-              1. Principal reto actual en el taller:
-            </label>
+            <div>
+              <label className="block text-xs font-black uppercase tracking-wider text-gray-500">
+                1. Principal reto actual en el taller:
+              </label>
+              <p className="text-xs text-gray-500 font-medium mt-0.5">
+                Puedes seleccionar más de una opción.
+              </p>
+            </div>
             <div className="space-y-2">
               {RETOS_TALLER.map((item) => {
-                const isSelected = formData.preocupacion === item.title;
+                const isSelected = formData.retos_actuales.includes(item.title);
                 return (
                   <div
                     key={item.id}
-                    onClick={() => handleInputChange('preocupacion', item.title)}
+                    onClick={() => handleToggleReto(item.title)}
                     className={`p-3.5 rounded-xl border-2 cursor-pointer transition text-left flex items-start gap-3 ${
                       isSelected
                         ? 'border-brand-anthracite bg-white shadow-sm'
                         : 'border-gray-200 bg-gray-50/70 hover:border-gray-400 hover:bg-white'
                     }`}
                   >
-                    <div className={`w-4 h-4 rounded-full border-2 flex items-center justify-center flex-shrink-0 mt-0.5 ${
+                    <div className={`w-4 h-4 rounded-md border-2 flex items-center justify-center flex-shrink-0 mt-0.5 transition ${
                       isSelected
                         ? 'border-brand-anthracite bg-brand-anthracite text-brand-yellow'
                         : 'border-gray-400 bg-white'
                     }`}>
-                      {isSelected && <div className="w-1.5 h-1.5 rounded-full bg-brand-yellow" />}
+                      {isSelected && <Check className="w-3 h-3 text-brand-yellow stroke-[3.5]" />}
                     </div>
                     <div>
                       <p className="font-bold text-sm text-brand-anthracite leading-tight">
@@ -576,7 +621,12 @@ const MigrationForm: React.FC = () => {
 
             <button
               type="submit"
-              className="flex-1 py-4 px-6 rounded-xl bg-brand-yellow text-brand-anthracite font-black text-base sm:text-lg shadow-lg hover:shadow-xl hover:opacity-95 transition transform active:scale-95 uppercase tracking-wider flex items-center justify-center gap-2"
+              disabled={formData.retos_actuales.length === 0}
+              className={`flex-1 py-4 px-6 rounded-xl font-black text-base sm:text-lg uppercase tracking-wider flex items-center justify-center gap-2 transition ${
+                formData.retos_actuales.length === 0
+                  ? 'bg-gray-200 text-gray-400 cursor-not-allowed shadow-none'
+                  : 'bg-brand-yellow text-brand-anthracite shadow-lg hover:shadow-xl hover:opacity-95 transform active:scale-95'
+              }`}
             >
               <span>Continuar</span>
               <ArrowRight className="w-5 h-5 stroke-[2.5]" />
@@ -789,10 +839,10 @@ const MigrationForm: React.FC = () => {
                 {formData.email}
               </span>
             </div>
-            <div className="flex items-center justify-between pb-2.5 border-b border-gray-150">
-              <span className="text-gray-500 font-medium">Reto principal:</span>
-              <span className="font-bold text-brand-anthracite text-right max-w-[60%] truncate">
-                {formData.preocupacion}
+            <div className="flex items-start justify-between pb-2.5 border-b border-gray-150 gap-4">
+              <span className="text-gray-500 font-medium flex-shrink-0">Retos actuales:</span>
+              <span className="font-bold text-brand-anthracite text-right break-words text-xs sm:text-sm">
+                {formData.retos_actuales.length > 0 ? formData.retos_actuales.join(' · ') : 'Ninguno seleccionado'}
               </span>
             </div>
             <div className="flex items-center justify-between pb-2.5 border-b border-gray-150">

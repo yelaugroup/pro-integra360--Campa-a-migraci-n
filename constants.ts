@@ -28,7 +28,9 @@ export interface FormSubmissionPayload {
   ciudad: string;
   telefono: string;
   email: string;
-  preocupacion: string;
+  preocupacion?: string;
+  "Retos actuales"?: string[];
+  retos_actuales?: string[];
   contact_preference?: 'whatsapp' | 'phone' | 'none';
   workshop_size?: '1-2' | '3-5' | '6-10' | '10+';
   uses_management_software?: boolean;
