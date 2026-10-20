@@ -75,7 +75,7 @@ const MigrationForm: React.FC = () => {
     workshop_size: '3-5' as '1-2' | '3-5' | '6-10' | '10+',
     uses_management_software: true as boolean,
     // Contacto personalizado: 'whatsapp' | 'phone' | 'none'
-    contact_preference: 'none' as 'whatsapp' | 'phone' | 'none',
+    contact_preference: '' as 'whatsapp' | 'phone' | 'none' | '',
     telefono: '',
     // Consentimientos legales
     consentPrivacidad: true,
@@ -158,6 +158,10 @@ const MigrationForm: React.FC = () => {
   };
 
   const validateStep4 = (): boolean => {
+    if (!formData.contact_preference) {
+      setError("Por favor, selecciona una opción para continuar.");
+      return false;
+    }
     if (formData.contact_preference === 'whatsapp' || formData.contact_preference === 'phone') {
       const cleanPhone = formData.telefono.trim().replace(/\s+/g, '');
       if (cleanPhone.length < 8) {
@@ -227,7 +231,7 @@ const MigrationForm: React.FC = () => {
       telefono: hasPhoneContact ? formData.telefono.trim() : "",
       email: formData.email.trim(),
       preocupacion: formData.preocupacion.trim(),
-      contact_preference: formData.contact_preference,
+      contact_preference: (formData.contact_preference as 'whatsapp' | 'phone' | 'none') || 'none',
       workshop_size: formData.workshop_size,
       uses_management_software: formData.uses_management_software,
       consents: {
@@ -596,7 +600,38 @@ const MigrationForm: React.FC = () => {
           </div>
 
           <div className="space-y-3 pt-2">
-            {/* Opción 1: Sí, por WhatsApp */}
+            {/* Opción 1: Sí, prefiero una llamada */}
+            <div
+              onClick={() => handleInputChange('contact_preference', 'phone')}
+              className={`p-4 rounded-xl border-2 cursor-pointer transition text-left flex items-start gap-3.5 ${
+                formData.contact_preference === 'phone'
+                  ? 'border-brand-anthracite bg-white shadow-md'
+                  : 'border-gray-200 bg-gray-50/80 hover:border-gray-400 hover:bg-white'
+              }`}
+            >
+              <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center flex-shrink-0 mt-0.5 ${
+                formData.contact_preference === 'phone'
+                  ? 'border-brand-anthracite bg-brand-anthracite text-brand-yellow'
+                  : 'border-gray-400 bg-white'
+              }`}>
+                {formData.contact_preference === 'phone' && <div className="w-2 h-2 rounded-full bg-brand-yellow" />}
+              </div>
+              <div className="flex-1">
+                <div className="flex items-center gap-2">
+                  <p className="font-bold text-sm sm:text-base text-brand-anthracite leading-tight">
+                    Sí, prefiero una llamada
+                  </p>
+                  <span className="text-[11px] font-black uppercase px-2 py-0.5 rounded bg-brand-yellow/30 text-brand-anthracite border border-brand-yellow/60">
+                    Recomendado
+                  </span>
+                </div>
+                <p className="text-xs sm:text-sm text-gray-500 mt-1 leading-normal">
+                  Un especialista de PRO Integra360 te llamará unos minutos para orientarte sin compromiso.
+                </p>
+              </div>
+            </div>
+
+            {/* Opción 2: Sí, por WhatsApp */}
             <div
               onClick={() => handleInputChange('contact_preference', 'whatsapp')}
               className={`p-4 rounded-xl border-2 cursor-pointer transition text-left flex items-start gap-3.5 ${
@@ -617,38 +652,12 @@ const MigrationForm: React.FC = () => {
                   <p className="font-bold text-sm sm:text-base text-brand-anthracite leading-tight">
                     Sí, por WhatsApp
                   </p>
-                  <span className="text-[11px] font-black uppercase px-2 py-0.5 rounded bg-emerald-100 text-emerald-800">
+                  <span className="text-[11px] font-black uppercase px-2 py-0.5 rounded bg-emerald-100 text-emerald-800 border border-emerald-200">
                     Rápido
                   </span>
                 </div>
                 <p className="text-xs sm:text-sm text-gray-500 mt-1 leading-normal">
                   Te escribiremos un mensaje breve para resolver dudas sobre tu caso concreto sin llamadas imprevistas.
-                </p>
-              </div>
-            </div>
-
-            {/* Opción 2: Sí, prefiero una llamada */}
-            <div
-              onClick={() => handleInputChange('contact_preference', 'phone')}
-              className={`p-4 rounded-xl border-2 cursor-pointer transition text-left flex items-start gap-3.5 ${
-                formData.contact_preference === 'phone'
-                  ? 'border-brand-anthracite bg-white shadow-md'
-                  : 'border-gray-200 bg-gray-50/80 hover:border-gray-400 hover:bg-white'
-              }`}
-            >
-              <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center flex-shrink-0 mt-0.5 ${
-                formData.contact_preference === 'phone'
-                  ? 'border-brand-anthracite bg-brand-anthracite text-brand-yellow'
-                  : 'border-gray-400 bg-white'
-              }`}>
-                {formData.contact_preference === 'phone' && <div className="w-2 h-2 rounded-full bg-brand-yellow" />}
-              </div>
-              <div className="flex-1">
-                <p className="font-bold text-sm sm:text-base text-brand-anthracite leading-tight">
-                  Sí, prefiero una llamada
-                </p>
-                <p className="text-xs sm:text-sm text-gray-500 mt-1 leading-normal">
-                  Un especialista de PRO Integra360 te llamará unos minutos para orientarte sin compromiso.
                 </p>
               </div>
             </div>
@@ -679,29 +688,6 @@ const MigrationForm: React.FC = () => {
               </div>
             </div>
 
-            {/* Campo condicional para WhatsApp */}
-            {formData.contact_preference === 'whatsapp' && (
-              <div className="pt-3 p-4 bg-brand-anthracite/5 rounded-xl border border-brand-anthracite/10 animate-fadeIn space-y-2">
-                <label className={labelClasses}>
-                  Número de WhatsApp <span className="text-brand-yellow font-black">*</span>
-                </label>
-                <input
-                  autoFocus
-                  required
-                  name="telefono"
-                  value={formData.telefono}
-                  onChange={(e) => handleInputChange('telefono', e.target.value)}
-                  type="tel"
-                  className={inputClasses}
-                  placeholder="600 000 000"
-                  autoComplete="tel"
-                />
-                <p className="text-xs text-gray-500 font-normal">
-                  Solo te escribiremos por WhatsApp para darte soporte sobre el Kit y tu taller.
-                </p>
-              </div>
-            )}
-
             {/* Campo condicional para Llamada */}
             {formData.contact_preference === 'phone' && (
               <div className="pt-3 p-4 bg-brand-anthracite/5 rounded-xl border border-brand-anthracite/10 animate-fadeIn space-y-2">
@@ -724,6 +710,29 @@ const MigrationForm: React.FC = () => {
                 </p>
               </div>
             )}
+
+            {/* Campo condicional para WhatsApp */}
+            {formData.contact_preference === 'whatsapp' && (
+              <div className="pt-3 p-4 bg-brand-anthracite/5 rounded-xl border border-brand-anthracite/10 animate-fadeIn space-y-2">
+                <label className={labelClasses}>
+                  Número de WhatsApp <span className="text-brand-yellow font-black">*</span>
+                </label>
+                <input
+                  autoFocus
+                  required
+                  name="telefono"
+                  value={formData.telefono}
+                  onChange={(e) => handleInputChange('telefono', e.target.value)}
+                  type="tel"
+                  className={inputClasses}
+                  placeholder="600 000 000"
+                  autoComplete="tel"
+                />
+                <p className="text-xs text-gray-500 font-normal">
+                  Solo te escribiremos por WhatsApp para darte soporte sobre el Kit y tu taller.
+                </p>
+              </div>
+            )}
           </div>
 
           <div className="pt-4 flex items-center gap-3">
@@ -738,7 +747,12 @@ const MigrationForm: React.FC = () => {
 
             <button
               type="submit"
-              className="flex-1 py-4 px-6 rounded-xl bg-brand-yellow text-brand-anthracite font-black text-base sm:text-lg shadow-lg hover:shadow-xl hover:opacity-95 transition transform active:scale-95 uppercase tracking-wider flex items-center justify-center gap-2"
+              disabled={!formData.contact_preference}
+              className={`flex-1 py-4 px-6 rounded-xl font-black text-base sm:text-lg uppercase tracking-wider flex items-center justify-center gap-2 transition ${
+                !formData.contact_preference
+                  ? 'bg-gray-200 text-gray-400 cursor-not-allowed shadow-none'
+                  : 'bg-brand-yellow text-brand-anthracite shadow-lg hover:shadow-xl hover:opacity-95 transform active:scale-95'
+              }`}
             >
               <span>Continuar</span>
               <ArrowRight className="w-5 h-5 stroke-[2.5]" />
